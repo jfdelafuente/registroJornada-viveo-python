@@ -7,11 +7,23 @@ import json
 import requests
 import re
 import telegram
-from telegram.error import NetworkError, Unauthorized
+# from telegram.error import NetworkError, Unauthorized
 import time
 import sys
-#Importamos el fichero con la configuracion
+# Importamos el fichero con la configuracion
 import configD
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+# una vez cargados los valores, podemos usarlos
+BOT_TOKEN = os.getenv("BOT_TOKEN")
+CHAT_ID=os.getenv('CHAT_ID')
+USER = os.getenv('USER')
+PASSW = os.getenv('PASS')
+COD_EMPLEADO = os.getenv('COD_EMPLEADO')
+peticionCMD = "{\"/vo_autologin.autologin/get-registra-tu-jornada\":{\"employeeNumber\":"+COD_EMPLEADO+"}}"
 
 logging.basicConfig(filename='registroJ.log', format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.DEBUG)
 
@@ -125,13 +137,13 @@ for f in soup1:
     for tag in hidden_tags:
         logging.debug(tag)
         if tag.get("name") == "username":
-            cabecerasOAM["username"] = configD.username
+            cabecerasOAM["username"] = USER
         elif tag.get("name") == "password":
-            cabecerasOAM["password"] = configD.password
+            cabecerasOAM["password"] = PASSW
         else:
             cabecerasOAM[tag.get("name")] = tag.get("value")
-cabecerasOAM["temp-username"] = configD.username
-cabecerasOAM["password"] = configD.password
+cabecerasOAM["temp-username"] = USER
+cabecerasOAM["password"] = PASSW
 
 logging.info(urlOAM)
 logging.info(cabecerasOAM)
@@ -182,7 +194,7 @@ authToken = re.findall(r".*Liferay.authToken\s?\=\s?'(.*)';",r.text)
 logging.debug(authToken)
 
 peticion = {}
-peticion["cmd"] = configD.peticionCMD
+peticion["cmd"] = peticionCMD
 peticion["p_auth"] = authToken[0]
 logging.debug(peticion)
 logging.info("Buscamos la autenticacion para el registro de jornada...")
@@ -259,9 +271,9 @@ mensaje += f'\nInforme desde {lunes} hasta el {fin}:\n - {dias} dias trabajados 
 logging.info(mensaje)
 
 if configD.tgenviar == True:
-    bot = telegram.Bot(configD.tgtoken)
+    bot = telegram.Bot(BOT_TOKEN)
     try:
         async def main():
-            await bot.sendMessage(configD.tgchatId, text=mensaje)
+            await bot.sendMessage(CHAT_ID, text=mensaje)
     except Exception as e:
         print("Se ha producido un error en el envío por ID de Chat: %s" % e);

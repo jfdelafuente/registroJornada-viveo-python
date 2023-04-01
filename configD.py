@@ -1,13 +1,15 @@
 #!/usr/bin/python3
+
+                    
 # Personales
-username = "usuario"
-password = "password"
-codigoEmpleado = "xxxxxxx"
-peticionCMD = "{\"/vo_autologin.autologin/get-registra-tu-jornada\":{\"employeeNumber\":"+codigoEmpleado+"}}"
+# username = "jdelat"
+# password = "!Barrios.2023"
+# codigoEmpleado = "800493"
+# peticionCMD = "{\"/vo_autologin.autologin/get-registra-tu-jornada\":{\"employeeNumber\":"+codigoEmpleado+"}}"
 #Telegram
 tgenviar = True
-tgtoken = '6254122046:AAHoZEv-dwqtrD2hSwxZFOHhX4MBSeQjOqs'
-tgchatId = '812427267'
+# tgtoken = '6254122046:AAHoZEv-dwqtrD2hSwxZFOHhX4MBSeQjOqs'
+# tgchatId = '812427267'
 #Dias teletrabajo (Lunes=1, Martes=2, Miercoles=3, Jueves=4, Viernes=5)
 diasTeletrabajo = [1,2]
 #Horas
