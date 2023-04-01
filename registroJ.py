@@ -20,7 +20,7 @@ load_dotenv()
 
 # una vez cargados los valores, podemos usarlos
 BOT_TOKEN = os.getenv("BOT_TOKEN")
-USER = os.getenv('USER')
+USER = os.getenv('USUARIO')
 PASSW = os.getenv('PASS')
 COD_EMPLEADO = os.getenv('COD_EMPLEADO')
 CHAT_FLAG =os.getenv('CHAT_FLAG')
@@ -271,8 +271,6 @@ totalHoras = totalSegundos/3600
 mensaje += f'\nInforme desde {lunes} hasta el {fin}:\n - {dias} dias trabajados ({diasT} teletrabajo, {diasF} La Finca)\n - Total horas: {totalHoras:.2f}'
 logging.info(mensaje)
 
-if CHAT_FLAG == True:
-    bot = botTelegram.BotTelegramRegistro(BOT_TOKEN)
-    bot.send_to_telegram(mensaje)
-
-    print("fin")
+# Lanzamos mensaje al bot
+bot = botTelegram.BotTelegramRegistro(BOT_TOKEN)
+bot.send_to_telegram(mensaje)
