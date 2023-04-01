@@ -3,15 +3,10 @@
 from bs4 import BeautifulSoup
 from datetime import date, datetime, timedelta
 import logging
-import json
 import requests
 import re
-import telegram
-# from telegram.error import NetworkError, Unauthorized
-# import time
 import BotTelegramRegistro as botTelegram
 import sys
-# Importamos el fichero con la configuracion
 import configD
 import os
 from dotenv import load_dotenv
@@ -26,7 +21,9 @@ COD_EMPLEADO = os.getenv('COD_EMPLEADO')
 CHAT_FLAG =os.getenv('CHAT_FLAG')
 peticionCMD = "{\"/vo_autologin.autologin/get-registra-tu-jornada\":{\"employeeNumber\":"+COD_EMPLEADO+"}}"
 
-logging.basicConfig(filename='registroJ.log', format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.DEBUG)
+logging.basicConfig(filename='registroJ.log', 
+                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', 
+                    level=logging.DEBUG)
 
 info = False
 pasada = False
