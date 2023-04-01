@@ -19,7 +19,7 @@ USER = os.getenv('USUARIO')
 PASSW = os.getenv('PASS')
 COD_EMPLEADO = os.getenv('COD_EMPLEADO')
 CHAT_FLAG =os.getenv('CHAT_FLAG')
-peticionCMD = "{\"/vo_autologin.autologin/get-registra-tu-jornada\":{\"employeeNumber\":"+COD_EMPLEADO+"}}"
+peticionCMD = "{\"/vo_autologin.autologin/get-registra-tu-jornada\":{\"employeeNumber\":" + COD_EMPLEADO + "}}"
 
 logging.basicConfig(filename='registroJ.log', 
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', 

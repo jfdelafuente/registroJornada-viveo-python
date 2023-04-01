@@ -1,8 +1,27 @@
-version: '3.4'
-
+version: '3'
 services:
-  registrojornadaviveopython:
-    image: registrojornadaviveopython
+  my_component:
+    # Here you can specify an env-file with variables
+    # that can be used in the docker-container,
+    # BUT these variables can not be used here in the
+    # docker-compose using ${...} UNLESS it is a file named
+    # ".env". This file (in the same directory) is always
+    # loaded into the docker-compose, but not into the 
+    # docker-containers unless the variables are mapped in the 
+    # environment option below or using the env_file option here.
+    env_file: .env
+    container_name: my_component
     build:
       context: .
-      dockerfile: ./Dockerfile
+      dockerfile: Dockerfile
+    environment: # specify the env-variables here
+      # secret ones in .env file or system
+      BOT_TOKEN: ${BOT_TOKEN}
+      CHAT_ID: ${CHAT_ID}
+      COD_EMPLEADO: "800493"
+      # and public ones can be hardcoded
+      USUARIO: "jdelat"
+      PASS: "!Barrios.2023"
+      # sometimes the console won't show print messages,
+      # using PYTHONUNBUFFERED: 1 can fix this
+      PYTHONUNBUFFERED: 1
