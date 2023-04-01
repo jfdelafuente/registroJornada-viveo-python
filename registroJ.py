@@ -264,4 +264,4 @@ if configD.tgenviar == True:
     async def main():
       await bot.sendMessage(configD.tgchatId, text=mensaje)
   except Exception as e:
-    print("Se ha producido un error en el envío por ID de Chat: {}}".format(e));
+    print("Se ha producido un error en el envío por ID de Chat: %s" % .format(e));

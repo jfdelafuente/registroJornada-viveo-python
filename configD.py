@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 # Personales
-username = "Jdelata"
-password = "!Barrios.2023"
-codigoEmpleado = "800493a"
+username = "usuario"
+password = "password"
+codigoEmpleado = "xxxxxxx"
 peticionCMD = "{\"/vo_autologin.autologin/get-registra-tu-jornada\":{\"employeeNumber\":"+codigoEmpleado+"}}"
 #Telegram
 tgenviar = True
