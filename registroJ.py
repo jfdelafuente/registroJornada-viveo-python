@@ -259,9 +259,9 @@ mensaje += f'\nInforme desde {lunes} hasta el {fin}:\n - {dias} dias trabajados 
 logging.info(mensaje)
 
 if configD.tgenviar == True:
-      bot = telegram.Bot(configD.tgtoken)
-  try:
-    async def main():
-      await bot.sendMessage(configD.tgchatId, text=mensaje)
-  except Exception as e:
-    print("Se ha producido un error en el envío por ID de Chat: %s" % .format(e));
+    bot = telegram.Bot(configD.tgtoken)
+    try:
+        async def main():
+            await bot.sendMessage(configD.tgchatId, text=mensaje)
+    except Exception as e:
+        print("Se ha producido un error en el envío por ID de Chat: %s" % e);
