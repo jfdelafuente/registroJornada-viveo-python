@@ -1,23 +1,13 @@
 #!/usr/bin/python3
 
-                    
-# Personales
-# username = "jdelat"
-# password = "!Barrios.2023"
-# codigoEmpleado = "800493"
-# peticionCMD = "{\"/vo_autologin.autologin/get-registra-tu-jornada\":{\"employeeNumber\":"+codigoEmpleado+"}}"
-#Telegram
-tgenviar = True
-# tgtoken = '6254122046:AAHoZEv-dwqtrD2hSwxZFOHhX4MBSeQjOqs'
-# tgchatId = '812427267'
-#Dias teletrabajo (Lunes=1, Martes=2, Miercoles=3, Jueves=4, Viernes=5)
+# Dias teletrabajo (Lunes=1, Martes=2, Miercoles=3, Jueves=4, Viernes=5)
 diasTeletrabajo = [1,2]
-#Horas
+# Horas
 hinicio = "8:00"
 hfin = "18:00"
 hinicioV = "7:30"
 hfinV = "15:00"
-#Programa
+# Programa
 urlVO = 'https://newvo.orange.es'
 urlOAMBase = 'https://applogin.orange.es'
 urlRegistroJ = 'https://newvo.orange.es/group/viveorange/registro-de-jornada'
@@ -25,7 +15,7 @@ urlRegistroJC = 'https://newvo.orange.es/api/jsonws/invoke'
 urlRJAccion = 'https://www.registratujornadaorange.com/RealizarAccion'
 urlRJInforme = 'https://www.registratujornadaorange.com/ObtenerContenidoInformeGeneral'
 
-#Festivos que se repiten todos los años
+# Festivos que se repiten todos los años
 festivosAnuales = []
 festivosAnuales.append("01/01")
 festivosAnuales.append("06/01")
@@ -36,7 +26,7 @@ festivosAnuales.append("09/11")
 festivosAnuales.append("06/12")
 festivosAnuales.append("08/12")
 
-#festivosOtros festivos y vacaciones (año completo)
+# festivosOtros festivos y vacaciones (año completo)
 festivosOtros = []
 festivosOtros.append("01/01/2022")
 festivosOtros.append("26/12/2022")
@@ -56,7 +46,7 @@ festivosOtros.append("22/03/2023")
 festivosOtros.append("23/03/2023")
 festivosOtros.append("24/03/2023")
 
-#Dias que teletrabjo fuera de los planificados ( X,J )
+# Dias que teletrabjo fuera de los planificados ( X,J )
 novoy = []
 novoy.append("14/11/2022")
 novoy.append("15/11/2022")

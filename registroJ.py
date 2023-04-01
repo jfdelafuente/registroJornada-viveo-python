@@ -8,7 +8,8 @@ import requests
 import re
 import telegram
 # from telegram.error import NetworkError, Unauthorized
-import time
+# import time
+import BotTelegramRegistro as botTelegram
 import sys
 # Importamos el fichero con la configuracion
 import configD
@@ -19,10 +20,10 @@ load_dotenv()
 
 # una vez cargados los valores, podemos usarlos
 BOT_TOKEN = os.getenv("BOT_TOKEN")
-CHAT_ID=os.getenv('CHAT_ID')
 USER = os.getenv('USER')
 PASSW = os.getenv('PASS')
 COD_EMPLEADO = os.getenv('COD_EMPLEADO')
+CHAT_FLAG =os.getenv('CHAT_FLAG')
 peticionCMD = "{\"/vo_autologin.autologin/get-registra-tu-jornada\":{\"employeeNumber\":"+COD_EMPLEADO+"}}"
 
 logging.basicConfig(filename='registroJ.log', format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.DEBUG)
@@ -270,10 +271,8 @@ totalHoras = totalSegundos/3600
 mensaje += f'\nInforme desde {lunes} hasta el {fin}:\n - {dias} dias trabajados ({diasT} teletrabajo, {diasF} La Finca)\n - Total horas: {totalHoras:.2f}'
 logging.info(mensaje)
 
-if configD.tgenviar == True:
-    bot = telegram.Bot(BOT_TOKEN)
-    try:
-        async def main():
-            await bot.sendMessage(CHAT_ID, text=mensaje)
-    except Exception as e:
-        print("Se ha producido un error en el envío por ID de Chat: %s" % e);
+if CHAT_FLAG == True:
+    bot = botTelegram.BotTelegramRegistro(BOT_TOKEN)
+    bot.send_to_telegram(mensaje)
+
+    print("fin")
