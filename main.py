@@ -19,6 +19,7 @@ USER = os.getenv('USUARIO')
 PASSW = os.getenv('PASS')
 COD_EMPLEADO = os.getenv('COD_EMPLEADO')
 CHAT_FLAG =os.getenv('CHAT_FLAG')
+CHAT_ID = os.getenv('CHAT_ID')
 peticionCMD = "{\"/vo_autologin.autologin/get-registra-tu-jornada\":{\"employeeNumber\":" + COD_EMPLEADO + "}}"
 
 logging.basicConfig(filename='registroJ.log', 
@@ -269,5 +270,5 @@ mensaje += f'\nInforme desde {lunes} hasta el {fin}:\n - {dias} dias trabajados 
 logging.info(mensaje)
 
 # Lanzamos mensaje al bot
-bot = botTelegram.BotTelegramRegistro(BOT_TOKEN)
+bot = botTelegram.BotTelegramRegistro(BOT_TOKEN, CHAT_ID)
 bot.send_to_telegram(mensaje)
