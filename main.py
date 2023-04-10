@@ -14,11 +14,12 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # una vez cargados los valores, podemos usarlos
-BOT_TOKEN = os.getenv("BOT_TOKEN")
-USER = os.getenv('USUARIO')
-PASSW = os.getenv('PASS')
-COD_EMPLEADO = os.getenv('COD_EMPLEADO')
+USER = os.environ['USUARIO']
+PASSW = os.environ['PASS']
+BOT_TOKEN = os.environ['BOT_TOKEN']
+COD_EMPLEADO = os.environ['COD_EMPLEADO']
 CHAT_FLAG =os.getenv('CHAT_FLAG')
+CHAT_ID = os.getenv('CHAT_ID')
 peticionCMD = "{\"/vo_autologin.autologin/get-registra-tu-jornada\":{\"employeeNumber\":" + COD_EMPLEADO + "}}"
 
 logging.basicConfig(filename='registroJ.log', 
@@ -269,5 +270,5 @@ mensaje += f'\nInforme desde {lunes} hasta el {fin}:\n - {dias} dias trabajados 
 logging.info(mensaje)
 
 # Lanzamos mensaje al bot
-bot = botTelegram.BotTelegramRegistro(BOT_TOKEN)
+bot = botTelegram.BotTelegramRegistro(BOT_TOKEN, CHAT_ID)
 bot.send_to_telegram(mensaje)
