@@ -51,4 +51,8 @@ festivosOtros.append("12/04/2023")
 novoy = []
 novoy.append("05/03/2023")
 novoy.append("11/08/2023")
+<<<<<<< HEAD
 novoy.append("16/08/2023")
+=======
+novoy.append("16/08/2023")
+>>>>>>> fbd7af0d17a25b123d1f261a167baa104d4bb6bc
