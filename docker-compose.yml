@@ -6,14 +6,4 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    environment: # specify the env-variables here
-      # secret ones in .env file or system
-      BOT_TOKEN: ${BOT_TOKEN}
-      CHAT_ID: ${CHAT_ID}
-      COD_EMPLEADO: ${COD_EMPLEADO}
-      # and public ones can be hardcoded
-      USUARIO: ${USUARIO}
-      PASS: ${PASS}
-      # sometimes the console won't show print messages,
-      # using PYTHONUNBUFFERED: 1 can fix this
-      PYTHONUNBUFFERED: 1
+    
