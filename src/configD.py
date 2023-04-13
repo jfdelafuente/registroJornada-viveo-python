@@ -28,13 +28,6 @@ festivosAnuales.append("08/12")
 
 # festivosOtros festivos y vacaciones (año completo)
 festivosOtros = []
-festivosOtros.append("01/01/2022")
-festivosOtros.append("26/12/2022")
-festivosOtros.append("02/12/2022")
-festivosOtros.append("27/12/2022")
-festivosOtros.append("28/12/2022")
-festivosOtros.append("29/12/2022")
-festivosOtros.append("30/12/2022")
 festivosOtros.append("25/01/2022")
 festivosOtros.append("02/02/2023")
 festivosOtros.append("20/03/2023")
@@ -45,7 +38,6 @@ festivosOtros.append("21/03/2023")
 festivosOtros.append("22/03/2023")
 festivosOtros.append("23/03/2023")
 festivosOtros.append("24/03/2023")
-festivosOtros.append("12/04/2023")
 
 # Dias que teletrabajo fuera de los planificados ( X,J )
 novoy = []

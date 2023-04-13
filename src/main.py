@@ -18,7 +18,16 @@ def evaluar_dia(dia):
   mensaje = ''
   hoy = dia.strftime("%d/%m/%Y")
   hoyFAnual = dia.strftime("%d/%m")
+
   print("Evaluamos dias:  %s %s" % (hoy, hoyFAnual))
+
+  print(dia.isoweekday())
+
+
+  if dia.isoweekday() not in configD.diasTeletrabajo:
+    registrar = hoy in configD.novoy
+    print("No es dia de teletrabajo, toca ofi, me quedo en casa?: " + str(registrar))
+    mensaje += f'\nNo es dia de teletrabajo, toca ofi, me quedo en casa?:'
 
   if hoy in configD.festivosOtros:
     mensaje += f'\nHoy es festivo/vacaciones, no cargamos registro de Jornada'
@@ -29,10 +38,6 @@ def evaluar_dia(dia):
     registrar = False
     print("Hoy es festivo anual, no cargamos registro de Jornada")
     
-  if datetime.today().isoweekday() not in configD.diasTeletrabajo:
-    registrar = hoy in configD.novoy
-    print("No es dia de teletrabajo, toca ofi, me quedo en casa?: " + str(registrar))
-    mensaje += f'\nNo es dia de teletrabajo, toca ofi, me quedo en casa?:'
   
   return mensaje, registrar
 
@@ -66,36 +71,36 @@ def main():
     elif "DIA" == sys.argv[1]:
       if len(sys.argv) > 2:
         dia = datetime.strptime(sys.argv[2], "%Y%m%d").date()
-        # diaForzado = True
+        diaForzado = True
         registrar = True
-        print("Evaluamos DIA FORZADO")
-        print("%s %s %s" % (info, pasada, diaForzado))
-        mensaje += "DIA FORZADO " + str(dia)
+        notificar = True
+        print("Evaluamos DIA FORZADO " + str(dia))
+        # print("%s %s %s" % (info, pasada, diaForzado))
+        #  mensaje += "DIA FORZADO " + str(dia)
         mensaje, notificar = evaluar_dia(dia)
       else:
-        print("Evaluamos DIA ACTUAL")
         dia = date.today()
-        mensaje += "DIA ACTUAL " + str(dia)
+        print("Evaluamos DIA ACTUAL " + str(dia))
+        # mensaje += "DIA ACTUAL " + str(dia)
         mensaje, notificar = evaluar_dia(dia)
     else:
       print("Error: %s no es un argumento de entrada válido." % sys.argv[1])
       # exit(0)
+      mensaje += ("Error: %s no es un argumento de entrada válido." % sys.argv[1])
       notificar = False
   else:
-    print("Error: Debes incliuir un argumento válido")
+    print("Error: Debes incliuir un argumento válido: [INFO | INFOP | DIA [YYMMDD] ]")
     exit(0)
       
   
-  if notificar == False:
-    mensaje += ("Error: %s no es un argumento de entrada válido." % sys.argv[1])
-  else:
+  if notificar != False:
     vOrange = viveOrange.ViveOrange(registrar, pasada)
     mensaje += vOrange.dummy()
 
   # Lanzamos mensaje al bot
-  bot = botTelegram.BotTelegramRegistro(BOT_TOKEN, CHAT_ID)
-  bot.send_to_telegram(mensaje)
-  print("fin ... prueba")
+  # bot = botTelegram.BotTelegramRegistro(BOT_TOKEN, CHAT_ID)
+  # bot.send_to_telegram(mensaje)
+  print("fin ... prueba : %s " % mensaje)
 
 
 if __name__ == "__main__":
