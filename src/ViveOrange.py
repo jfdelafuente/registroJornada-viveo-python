@@ -13,7 +13,6 @@ class ViveOrange:
   USER = ''
   PASSW = ''
   COD_EMPLEADO = ''
-  
 
   def __init__(self, registrar, pasada):
     load_dotenv()
@@ -23,13 +22,14 @@ class ViveOrange:
     self.PASSW = os.environ['PASS']
     self.COD_EMPLEADO = os.environ['COD_EMPLEADO']
 
-  def dummy(self):
-    return "Dummy"
+  def dummy(self, dia):
+    mensaje = "Dummy " + str(dia)
+    return mensaje
 
-  def consultar(self):
-    dia = date.today()
+  def consultar(self, dia):
+    # dia = date.today()
     hoy = dia.strftime("%d/%m/%Y")
-    hoyFAnual = dia.strftime("%d/%m")
+    # hoyFAnual = dia.strftime("%d/%m")
     hinicio = configD.hinicio
     hfin = configD.hfin
     mensaje = ''
@@ -116,7 +116,8 @@ class ViveOrange:
     r = s.get(url)
     
     if self.registrar == True:
-        logging.info("Cargamos registro jornada (ko valor normal) para " + hoy + " de " + hinicio + " a " + hfin)
+        logging.info("Cargamos registro jornada (ko valor normal) para " + hoy + 
+                     " de " + hinicio + " a " + hfin)
         r = s.post(configD.urlRJAccion, data = {"tipoAccion":"horaRegistroCargada", 
                                                 "motivo":"1", 
                                                 "fechaini":hoy+" "+hinicio, 
@@ -168,5 +169,5 @@ class ViveOrange:
           diasF += 1
     
     totalHoras = totalSegundos/3600
-    mensaje += f'\nInforme desde {lunes} hasta el {fin}:\n - {dias} dias trabajados ({diasT} teletrabajo, {diasF} La Finca)\n - Total                     horas: {totalHoras:.2f}'
+    mensaje += f'\nInforme desde {lunes} hasta el {fin}:\n - {dias} dias trabajados ({diasT} teletrabajo, {diasF} La Finca)\n - Total horas: {totalHoras:.2f}'
     return mensaje
