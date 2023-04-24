@@ -31,12 +31,13 @@ festivosAnuales.append("01/11")
 festivosAnuales.append("06/12")
 festivosAnuales.append("08/12")
 festivosAnuales.append("25/12")
+festivosAnuales.append("02/05")
+festivosAnuales.append("02/05/2023") #Comunidad Madrid
+festivosAnuales.append("15/05/2023") # San Isidro
+festivosAnuales.append("09/11/2023") # Almudena
 
-# festivosOtros festivos y vacaciones (año completo)
+# festivosOtros vacaciones (año completo)
 festivosOtros = []
-festivosOtros.append("02/05/2023") #Comunidad Madrid
-festivosOtros.append("15/05/2023") # San Isidro
-festivosOtros.append("09/11/2023") # Almudena
 festivosOtros.append("17/04/2023")
 festivosOtros.append("18/04/2023")
 festivosOtros.append("19/04/2023")

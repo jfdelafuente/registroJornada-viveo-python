@@ -24,12 +24,11 @@ class ViveOrange:
 
   def dummy(self, dia):
     mensaje = "Dummy " + str(dia)
+    logging.info("ViveOrange Dummy -->  '%s'" % mensaje)
     return mensaje
 
-  def consultar(self, dia):
-    # dia = date.today()
+  def connectar(self, dia):
     hoy = dia.strftime("%d/%m/%Y")
-    # hoyFAnual = dia.strftime("%d/%m")
     hinicio = configD.hinicio
     hfin = configD.hfin
     mensaje = ''
