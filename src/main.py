@@ -1,274 +1,131 @@
-#!/usr/bin/python3
+import os
+from datetime import date, datetime
 
-from bs4 import BeautifulSoup
-from datetime import date, datetime, timedelta
-import logging
-import requests
-import re
 import BotTelegramRegistro as botTelegram
 import sys
 import configD
-import os
+import logging
+import ViveOrange as viveOrange
 from dotenv import load_dotenv
 
 load_dotenv()
 
-# una vez cargados los valores, podemos usarlos
-USER = os.environ['USUARIO']
-PASSW = os.environ['PASS']
 BOT_TOKEN = os.environ['BOT_TOKEN']
-COD_EMPLEADO = os.environ['COD_EMPLEADO']
 CHAT_FLAG =os.getenv('CHAT_FLAG')
 CHAT_ID = os.getenv('CHAT_ID')
-peticionCMD = "{\"/vo_autologin.autologin/get-registra-tu-jornada\":{\"employeeNumber\":" + COD_EMPLEADO + "}}"
 
 logging.basicConfig(filename='registroJ.log', 
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', 
                     level=logging.DEBUG)
 
-info = False
-pasada = False
-dia = date.today()
-diaForzado = False
+def evaluar_dia_forzado(dia):
+  mensaje = ''
+  registrar = True
+  logging.debug("Evaluamos el día forzado %s" % str(dia))
+  return mensaje, registrar
+  
+def evaluar_dia(dia):
+  mensaje = ''
+  registrar = True
+  TELETRABAJO = "No es dia de teletrabajo, tengo teletrabajo ocasional ? "
+  FESTIVO = "Hoy es festivo/vacaciones, no cargamos registro de Jornada."
+  VACACIONES = "Hoy estás de vacaciones. Disfruta del día."
+  hoy = dia.strftime("%d/%m/%Y")
+  hoy_fanual = dia.strftime("%d/%m")
 
-# Si llega INFO solo se saca el informe de horas (no se registra jornada)
-# en el caso de INFOP ademas es para la semana anterior
-logging.info(f'Argumentos recibidos: {len(sys.argv)}')
-if len(sys.argv) > 1:
-   logging.info(sys.argv[1])
-   info = "INFO" in sys.argv[1]
-   if "INFOP" == sys.argv[1]:
-      pasada = True
-   elif "DIA" == sys.argv[1]:
-      if len(sys.argv) > 2:
-         dia = datetime.strptime(sys.argv[2], "%Y%m%d").date()
-         diaForzado = True
+  # logging.debug("Evaluamos dias:  %s %s " % (hoy, hoy_fanual))
+  # print(dia.isoweekday())
 
+  # Evaluamos Vacaciones y Festivos
+  if hoy in configD.festivosOtros:
+    mensaje += f'\n{VACACIONES}'
+    registrar = False
+    logging.debug("Evaluamos día --> Vacaciones : %s : %s" % (VACACIONES, str(registrar)))
+  elif hoy_fanual in configD.festivosAnuales:
+    mensaje += f'\n{FESTIVO}'
+    registrar = False
+    logging.debug("Evaluamos día --> Festivos : %s : %s" % (FESTIVO, str(registrar)))
+  else:
+    logging.debug("Evaluamos día --> Ni vacas ni festivo")
 
-hoy = dia.strftime("%d/%m/%Y")
-hoyFAnual = dia.strftime("%d/%m")
-hinicio = configD.hinicio
-hfin = configD.hfin
-
-mensaje = '[Registro Jornada]'
-notificar = True
-registrar = True
-
-if info:
-   logging.info("Solo obtenemos informacion, no cargamos nuevo registro")
-   registrar = False
-else:
-    if datetime.today().isoweekday() == 5:
-        hinicio = configD.hinicioV
-        hfin = configD.hfinV
-    if hoy in configD.festivosOtros:
-        mensaje += f'\nHoy es festivo/vacaciones, no cargamos registro de Jornada'
-        registrar = False
-    elif hoyFAnual in configD.festivosAnuales:
-        mensaje += f'\nHoy es festivo anual, no cargamos registro de Jornada'
-        registrar = False
+  # Evaluamos Días de Teletrabajo
+  if dia.isoweekday() not in configD.diasTeletrabajo:
+    registrar = hoy in configD.novoy
+    logging.debug("Evaluamos dias de la semana: %s : %s" % (TELETRABAJO, str(registrar)))
+    mensaje += f'\n{TELETRABAJO} : {registrar}'
+  else:
+    logging.debug("Registramos el '%s', ya que corresponde a un día de teletrabajo y no he indicado Teletrabajo Ocasional." % dia)
     
-    if datetime.today().isoweekday() not in configD.diasTeletrabajo:
-        registrar = hoy in configD.novoy
-        logging.info("No es dia de teletrabajo, toca ofi, me quedo en casa?: " + str(registrar))
-        notificar = registrar
-
-    if diaForzado:
-        logging.info("Dia forzado, registramos")
-        notificar = True
-        registrar = True
-        mensaje = '[Registro Jornada]'
+  return mensaje, registrar
 
 
-if notificar == False:
+
+def main():
+  info = False
+  pasada = False
+  dia_forzado = False 
+  mensaje = "[REGISTRO JORNADA] "
+  notificar = True
+  registrar = True
+  dia = date.today()
+  logging.debug(f'Argumentos recibidos: {len(sys.argv)}')
+  
+  if len(sys.argv) > 1:
+    logging.debug("Argumento de entrada: %s" % sys.argv[1])
+    if "INFO" == sys.argv[1]:
+      info = True
+      registrar = False
+      logging.debug(" INFO: Info:%s Pasada:%s DiaForzado:%s" % (info, pasada, dia_forzado))
+      mensaje += "Información Semanal "
+    elif "INFOP" == sys.argv[1]:
+      pasada = True
+      info = True
+      registrar = False
+      logging.debug(" INFOP: Info:%s Pasada:%s DiaForzado:%s" % (info, pasada, dia_forzado))
+      mensaje += "Informacion Semana Anterior "
+    elif "DIA" == sys.argv[1]:
+      registrar = True
+      notificar = True
+      if len(sys.argv) > 2:
+        dia = datetime.strptime(sys.argv[2], "%Y%m%d").date()
+        dia_forzado = True
+        logging.debug("DIA FORZADO: %s info:%s pasado:%s dia_forzado:%s" % (str(dia), info, pasada, dia_forzado))
+        # evaluar_dia(dia) para probar, luego comentar
+        mensaje, registrar = evaluar_dia(dia)
+      else:
+        dia_forzado = False
+        logging.debug("DIA ACTUAL: %s info:%s pasado:%s dia_forzado:%s" % (str(dia), info, pasada, dia_forzado))
+        mensaje, registrar = evaluar_dia(dia)
+    else:
+      print("Error: '%s' no es un argumento de entrada válido. Debes incluir un argumento válido: [INFO | INFOP | DIA [YYMMDD] ]" % sys.argv[1])
+      logging.info("Error: '%s' no es un argumento de entrada válido. Debes incluir un argumento válido: [INFO | INFOP | DIA [YYMMDD] ]" % sys.argv[1])
+      registrar = False
+      exit(0)
+      # mensaje += ("Error: '%s' no es un argumento de entrada válido." % sys.argv[1])
+      # notificar = False
+  else:
+    logging.info("Error: Debes incluir un argumento válido: [INFO | INFOP | DIA [YYMMDD] ]")
+    print("Error: Debes incluir un argumento válido: [INFO | INFOP | DIA [YYMMDD] ]")
     exit(0)
+      
+  logging.debug("Resumen: %s \nInfo: %s\nInfop : %s\nDia Forzado : %s\nNotificar : %s\nRegistrar : %s " % (dia, info, pasada, dia_forzado, notificar, registrar))
+  # if registrar != True:
+  #  logging.info("Causa : %s" % mensaje)
 
-#Nos tenemos que logar en Vive Orange para sacar la autorizacion del registro de jornada
-sHeaders = {'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:108.0) Gecko/20100101 Firefox/108.0'}
-s = requests.Session()
-s.headers.update(sHeaders)
-logging.info("Nos vamos a Vive Orange...")
-logging.debug("Cookies 1: " + str(s.cookies.get_dict()))
-logging.debug("Headers 1: " + str(s.headers))
-r = s.get(configD.urlVO)
-logging.debug(r.headers)
-logging.info(r.status_code)
-logging.debug(r.cookies)
-logging.debug(r.text)
-logging.debug("Cookies 2: " + str(s.cookies.get_dict()))
-logging.debug("Headers 2: " + str(s.headers))
+  
+  if notificar == True:
+    vive_orange = viveOrange.ViveOrange(registrar, pasada)
+    logging.info("Vive Orange connect")
+    # mensaje += vive_orange.connectar(dia)
+    mensaje += vive_orange.dummy(dia)
 
-soup = BeautifulSoup(r.text, 'lxml')
-soup1 = soup.select('body form')
+    # Lanzamos mensaje al bot
+    logging.info("Enviamos el mensaje: '%s' al Bot" % mensaje)
+    bot = botTelegram.BotTelegramRegistro(BOT_TOKEN, CHAT_ID)
+    bot.send_to_telegram(mensaje)
 
-urlOAM = ''
-cabecerasOAM = {}
-
-for f in soup1:
-    logging.debug(f.get('action'))
-    urlOAM = f.get('action')
-    hidden_tags = f.find_all("input", type="hidden")
-    for tag in hidden_tags:
-        logging.debug(tag)
-        cabecerasOAM[tag.get("name")] = tag.get("value")
-
-logging.info(urlOAM)
-logging.info(cabecerasOAM)
-logging.info("Nos vamos a OAM...")
-r = s.post(urlOAM, data=cabecerasOAM)
-logging.debug(r.headers)
-logging.info(r.status_code)
-logging.debug(r.cookies)
-logging.debug(r.text)
-logging.debug("Cookies 3: " + str(s.cookies.get_dict()))
-logging.debug("Headers 3: " + str(s.headers))
-
-soup = BeautifulSoup(r.text, 'lxml')
-soup1 = soup.select('form#loginData')
-
-urlOAM = configD.urlOAMBase
-cabecerasOAM = {}
-
-for f in soup1:
-    logging.debug(f.get('action'))
-    urlOAM = urlOAM + f.get('action')
-    hidden_tags = f.find_all("input", type="hidden")
-    for tag in hidden_tags:
-        logging.debug(tag)
-        if tag.get("name") == "username":
-            cabecerasOAM["username"] = USER
-        elif tag.get("name") == "password":
-            cabecerasOAM["password"] = PASSW
-        else:
-            cabecerasOAM[tag.get("name")] = tag.get("value")
-cabecerasOAM["temp-username"] = USER
-cabecerasOAM["password"] = PASSW
-
-logging.info(urlOAM)
-logging.info(cabecerasOAM)
-logging.info("Nos logamos en OAM...")
-r = s.post(urlOAM, data=cabecerasOAM)
-logging.debug(r.headers)
-logging.info(r.status_code)
-logging.debug(r.cookies)
-logging.debug(r.text)
-logging.debug("Cookies 4: " + str(s.cookies.get_dict()))
-logging.debug("Headers 4: " + str(s.headers))
-
-# Volvemos a Vive Orange
-soup = BeautifulSoup(r.text, 'lxml')
-soup1 = soup.select('body form')
-
-urlOAM = ''
-cabecerasOAM = {}
-
-for f in soup1:
-    logging.debug(f.get('action'))
-    urlOAM = f.get('action')
-    hidden_tags = f.find_all("input", type="hidden")
-    for tag in hidden_tags:
-        cabecerasOAM[tag.get("name")] = tag.get("value")
-
-logging.info(urlOAM)
-logging.info(cabecerasOAM)
-logging.info("Volvemos a Vive Orange...")
-r = s.post(urlOAM, data=cabecerasOAM)
-logging.debug(r.headers)
-logging.info(r.status_code)
-logging.debug(r.cookies)
-logging.debug(r.text)
-logging.debug("Cookies 5: " + str(s.cookies.get_dict()))
-logging.debug("Headers 5: " + str(s.headers))
+  logging.debug("------------------- \n")
 
 
-r = s.get(configD.urlRegistroJ)
-logging.debug(r.headers)
-logging.info(r.status_code)
-logging.debug(r.cookies)
-logging.debug(r.text)
-logging.debug("Cookies 6: " + str(s.cookies.get_dict()))
-logging.debug("Headers 6: " + str(s.headers))
-
-authToken = re.findall(r".*Liferay.authToken\s?\=\s?'(.*)';",r.text)
-logging.debug(authToken)
-
-peticion = {}
-peticion["cmd"] = peticionCMD
-peticion["p_auth"] = authToken[0]
-logging.debug(peticion)
-logging.info("Buscamos la autenticacion para el registro de jornada...")
-r = s.post(configD.urlRegistroJC, data=peticion)
-logging.debug(r.headers)
-logging.info(r.status_code)
-logging.debug(r.cookies)
-logging.info(r.text)
-logging.debug("Cookies 7: " + str(s.cookies.get_dict()))
-logging.debug("Headers 7: " + str(s.headers))
-
-# Nos logamos en la web del registro de jornada
-url = r.text.replace("\"","").replace("\\","")
-s = requests.Session()
-logging.info("Obtenemos jsessionid")
-r = s.get(url)
-logging.info(s.cookies.get("JSESSIONID"))
-logging.info(r.headers)
-logging.info(r.status_code)
-logging.info(r.cookies)
-
-if registrar == True:
-    logging.info("Cargamos registro jornada (ko valor normal) para " + hoy + " de " + hinicio + " a " + hfin)
-    r = s.post(configD.urlRJAccion, data = {"tipoAccion":"horaRegistroCargada","motivo":"1","fechaini":hoy+" "+hinicio,"fechafin":hoy+" "+hfin,"sede":"","horaEfectiva":""})
-    html_text = r.text
-    logging.info(html_text)
-    logging.info(r.status_code)
-    mensaje += f'\nCargado registro de jornada {hoy} de {hinicio} a {hfin}'
-
-
-finD = date.today()
-#hoy5d = date.today() - timedelta(days=5)
-#hoy5 = hoy5d.strftime("%d/%m/%Y")
-lunesD = datetime.today() - timedelta(days=datetime.today().weekday() % 7)
-
-if pasada:
-    lunesD = lunesD - timedelta(days=7)
-    finD = lunesD + timedelta(days=4)
-
-lunes = lunesD.strftime("%d/%m/%Y")
-fin = finD.strftime("%d/%m/%Y")
-
-logging.info("Consultamos registro jornada desde " + lunes + " hasta " + fin)
-r = s.post(configD.urlRJInforme, data = {"tipoInforme":"1","checkcodigo":"1","seleccionIdEmpleado":"","movil":"0","seleccionFechaInicio":lunes+"","seleccionFechaFin":fin+""})
-html_text = r.text
-logging.info(html_text)
-logging.info(r.status_code)
-
-soup = BeautifulSoup(html_text, 'lxml')
-soup1 = soup.select('#tblEventos > tbody > tr')
-
-dias = 0 
-diasT = 0 
-diasF = 0 
-totalSegundos = 0 
-
-for i in soup1:
-   logging.info(i.select_one('td:nth-child(1)').text)
-   logging.info(i.select_one('td:nth-child(2)').text)
-   logging.info(i.select_one('td:nth-child(3)').text)
-   logging.info(i.select_one('td:nth-child(4)').text)
-   logging.info(i.select_one('td:nth-child(5)').text)
-   dInicio = datetime.strptime(i.select_one('td:nth-child(3)').text, '%d/%m/%Y %H:%M')
-   dFin = datetime.strptime(i.select_one('td:nth-child(5)').text, '%d/%m/%Y %H:%M')
-   totalSegundos += (dFin - dInicio).total_seconds()
-   dias += 1
-   if "TELETRABAJO" in i.select_one('td:nth-child(4)').text:
-      diasT += 1
-   if "FINCA" in i.select_one('td:nth-child(4)').text:
-      diasF += 1
-
-totalHoras = totalSegundos/3600
-mensaje += f'\nInforme desde {lunes} hasta el {fin}:\n - {dias} dias trabajados ({diasT} teletrabajo, {diasF} La Finca)\n - Total horas: {totalHoras:.2f}'
-logging.info(mensaje)
-
-# Lanzamos mensaje al bot
-bot = botTelegram.BotTelegramRegistro(BOT_TOKEN, CHAT_ID)
-bot.send_to_telegram(mensaje)
+if __name__ == "__main__":
+    main()

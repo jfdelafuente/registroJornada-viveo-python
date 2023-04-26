@@ -7,36 +7,35 @@ class BotTelegramRegistro:
     chat_id = ''
 
     def __init__(self, token, chat_id):
-      print("%s %s" % (token, chat_id))
+      #print("%s %s" % (token, chat_id))
       self.token = token
       if (chat_id is None):
-        print("Buscamos el chat_id")
+        # print("Buscamos el chat_id")
         self.chat_id = self._get_chat_id()
       else:
-        print("Chat id %s" % chat_id)
+        # print("Chat id : %s" % chat_id)
         self.chat_id=chat_id
 
     def _get_chat_id(self):
       url = f"https://api.telegram.org/bot{self.token}/getUpdates"
-      print("LLamando a %s" % url)
       try:
           response = requests.get(url)
-          print(response)
+          logging.debug("Bot get_chat_id --> %s " % response)
       except Exception as e:
           print(e)
       final = json.loads(response.text)
       chat_id = final['result'][0]['message']['chat']['id']
-      print("chat id -->", chat_id)
+      logging.debug("chat id --> %s" % chat_id)
       return chat_id
     
     def send_to_telegram(self, message):
-      apiURL = f'https://api.telegram.org/bot{self.token}/sendMessage'
-      print("LLamando a %s" % apiURL)
+      url = f'https://api.telegram.org/bot{self.token}/sendMessage'
       try:
-          response = requests.post(apiURL, 
+          response = requests.post(url, 
                         json={'chat_id': self.chat_id, 
                               'text': message}
                         )
-          print(response.text)
+          # print(response.text)
+          logging.info("Bot send_to_telegram --> %s" % response.status_code)
       except Exception as e:
           print(e)
