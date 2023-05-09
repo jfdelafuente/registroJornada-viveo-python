@@ -1,4 +1,3 @@
-import  telebot
 from dotenv import load_dotenv
 from datetime import date
 import os
