@@ -1,5 +1,9 @@
 #!/usr/bin/python3
 
+TELETRABAJO = "No es dia de teletrabajo, tengo teletrabajo ocasional ? "
+FESTIVO = "Hoy es festivo, no cargamos registro de Jornada."
+VACACIONES = "Hoy estás de vacaciones. Disfruta del día."
+
 # Dias teletrabajo (Lunes=1, Martes=2, Miercoles=3, Jueves=4, Viernes=5)
 diasTeletrabajo = [1,2]
 
@@ -31,10 +35,8 @@ festivosAnuales.append("01/11")
 festivosAnuales.append("06/12")
 festivosAnuales.append("08/12")
 festivosAnuales.append("25/12")
-festivosAnuales.append("02/05")
-festivosAnuales.append("02/05/2023") #Comunidad Madrid
-festivosAnuales.append("15/05/2023") # San Isidro
-festivosAnuales.append("09/11/2023") # Almudena
+festivosAnuales.append("15/05") # San Isidro
+festivosAnuales.append("09/11") # Almudena
 
 # festivosOtros vacaciones (año completo)
 festivosOtros = []
