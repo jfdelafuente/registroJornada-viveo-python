@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-TELETRABAJO = "Hoy es dia de teletrabajo ocasional."
+TELETRABAJO = "Hoy es dia de teletrabajo ocasional"
 FESTIVO = "Hoy es festivo."
 VACACIONES = "Hoy estás de vacaciones. Disfruta del día."
 

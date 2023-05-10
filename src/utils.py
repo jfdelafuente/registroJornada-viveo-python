@@ -38,7 +38,7 @@ def get_info() -> dict:
             }
     return params
 
-def validar_dia(day: str) -> str:
+def validar_dia(day: str):
     dia = date.today()
     if day == 'HOY':
         return dia

@@ -15,7 +15,9 @@ bot = telebot.TeleBot(token)
 dic_user = {}
 
 ## logging
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+logging.basicConfig(filename='registroJornada.log',
+                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', 
+                    level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
@@ -28,7 +30,8 @@ def _start(message):
 
     ## send first msg
     msg = "Hola "+str(message.chat.username)+\
-          ", Soy el Registro de Jornadas de Orange. Para conocer los comandos, use \n/help"
+          ", Soy el Registro de Jornadas de Orange.\n\
+            Para conocer los comandos, use \n/help"
     bot.send_message(message.chat.id, msg)
 
 
@@ -68,44 +71,43 @@ def info_handler(message):
 @bot.message_handler(commands=['dia'])
 def dia_handler(message):
     logging.info(str(message.chat.username)+" - "+str(message.chat.id)+" --- DIA")
-    text = "Que día quieres registrar ?\nElige uno: *HOY*,  *AYER*  o un día en formato [YYYYMMDD]."
+    text = "¿Que día quieres registrar ?\nElige uno: *HOY*,  *AYER*  o un día en formato [YYYYMMDD]."
     sent_msg = bot.send_message(message.chat.id, text, parse_mode="Markdown")
     bot.register_next_step_handler(sent_msg, day_handler)
 
 def day_handler(message):
     day = message.text
     logging.info(str(message.text)+" --- DAY HANDLER")
-    diaRegistro = validar_dia(day.upper())
-    mensaje, registrar = dia_validate(diaRegistro)
+    dia_registro = validar_dia(day.upper())
+    mensaje, registrar = dia_validate(dia_registro)
     logging.info("Mensaje: %s  -  Registro: %s" % (mensaje, registrar))
     if registrar == True:
         vive_orange = viveOrange.ViveOrange(True, False)
-        # mensaje = vive_orange.connectar(diaRegistro)
-        msg = vive_orange.dummy(diaRegistro, mensaje)
-        bot.send_message(message.chat.id, "Aquí está tu info!")
+        msg = vive_orange.connectar(dia_registro)
+        # msg = vive_orange.dummy(dia_registro, mensaje)
+        bot.send_message(message.chat.id, "###  Realizamos Operacion  ####")
         bot.send_message(message.chat.id, msg, parse_mode="Markdown")
     else:
-        # text = f'Hoy {diaRegistro} tienes teletrabajo ocasional.\n¿¿Quieres registrar el día ??\nElige uno: *Y* o *N*.'
-        text = f'Hoy {diaRegistro} {mensaje}.\n¿¿Quieres registrar el día ??\nElige uno: *Y* o *N*.'
+        text = f'*Hoy es: {dia_registro}.\n¿{mensaje}?*\n¿Quieres registrar el día ??\nTeclea: *Y* o *N*.'
         sent_msg = bot.send_message(message.chat.id, text, parse_mode="Markdown")
-        bot.register_next_step_handler(sent_msg, day_handler_teletrabajo, diaRegistro)
+        bot.register_next_step_handler(sent_msg, day_handler_teletrabajo, dia_registro)
 
 def day_handler_teletrabajo(message, day):
     logging.info(str(message.text)+" --- DAY HANDLER TELETRABAJO")
     if message.text == "Y":
-        msg1= "###  Realizamos Operacion  ####"
+        msg_cabecera = "###  Realizamos Operacion  ####"
         vive_orange = viveOrange.ViveOrange(True, False)
-        # mensaje = vive_orange.connectar(diaRegistro)
-        msg = vive_orange.dummy(day, "Dia Forzado")
+        msg = vive_orange.connectar(day)
+        # msg = vive_orange.dummy(day, "Dia Forzado")
     else:
-        msg1= "###  Cancelamos operacion  ####"
+        msg_cabecera= "###  Cancelamos operacion  ####"
         msg = "Utilice los siguients comandos:\n\
             /dia - Realizar un registro de jornada\n\
             /info - Ver Registro semanal\n\
             /infop - Ver Registro semana pasada\n\
             /horoscope - Ver el Horoscopo "
         
-    bot.send_message(message.chat.id, msg1)
+    bot.send_message(message.chat.id, msg_cabecera)
     bot.send_message(message.chat.id, msg, parse_mode="Markdown")
         
 
