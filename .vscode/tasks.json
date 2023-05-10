@@ -11,6 +11,16 @@
 				"context": "${workspaceFolder}",
 				"pull": true
 			}
+		},
+		{
+			"type": "docker-run",
+			"label": "docker-run: debug",
+			"dependsOn": [
+				"docker-build"
+			],
+			"python": {
+				"file": "venv/lib64/python3.8/site-packages/lxml/isoschematron/__init__.py"
+			}
 		}
 	]
 }
