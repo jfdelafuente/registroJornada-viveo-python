@@ -49,11 +49,8 @@ def _help(message):
 # /version
 @bot.message_handler(commands=['version'])
 def info_version(message):
-    msg = "Version.Utilice los siguients comandos:\n\
-        /dia - Realizar un registro de jornada\n\
-        /info - Ver Registro semanal\n\
-        /infop - Ver Registro semana pasada\n\
-        /horoscope - Ver el Horoscopo "
+    msg = "Version info tabulada. Utilice los siguients comandos:\n\
+        Para conocer los comandos, use \n/help"
     bot.send_message(message.chat.id, msg)
 
 # /info

@@ -202,12 +202,18 @@ class ViveOrange:
     diasF = 0 
     totalSegundos = 0 
 
+    msg = ''
     for i in soup1:
         logging.info(i.select_one('td:nth-child(1)').text)
         logging.info(i.select_one('td:nth-child(2)').text)
         logging.info(i.select_one('td:nth-child(3)').text)
         logging.info(i.select_one('td:nth-child(4)').text)
         logging.info(i.select_one('td:nth-child(5)').text)
+        logging.info(i.select_one('td:nth-child(6)').text)
+        msg += "\n# %s : %s\n  %s : %s" % (i.select_one('td:nth-child(3)').text, \
+            i.select_one('td:nth-child(4)').text, \
+            i.select_one('td:nth-child(5)').text, \
+            i.select_one('td:nth-child(6)').text)
         dInicio = datetime.strptime(i.select_one('td:nth-child(3)').text, '%d/%m/%Y %H:%M')
         dFin = datetime.strptime(i.select_one('td:nth-child(5)').text, '%d/%m/%Y %H:%M')
         totalSegundos += (dFin - dInicio).total_seconds()
@@ -219,5 +225,6 @@ class ViveOrange:
 
     totalHoras = totalSegundos/3600
     mensaje += f'\nInforme desde {lunes} hasta el {fin}:\n - {dias} dias trabajados ({diasT} teletrabajo, {diasF} La Finca)\n - Total horas: {totalHoras:.2f}'
+    mensaje += msg
     logging.info(mensaje)
     return mensaje
