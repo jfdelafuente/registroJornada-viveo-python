@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
-TELETRABAJO = "Hoy es dia de teletrabajo ocasional"
-FESTIVO = "Hoy es festivo."
+TELETRABAJO = "Es dia de teletrabajo ocasional"
+FESTIVO = "Es día festivo."
 VACACIONES = "Hoy estás de vacaciones. Disfruta del día."
 
 # Dias teletrabajo (Lunes=1, Martes=2, Miercoles=3, Jueves=4, Viernes=5)
@@ -53,5 +53,6 @@ festivosOtros.append("28/04/2023")
 # Dias que teletrabajo fuera de los planificados ( X,J,V )
 novoy = []
 novoy.append("05/04/2023")
+novoy.append("10/05/2023")
 novoy.append("11/08/2023")
 novoy.append("16/08/2023")
