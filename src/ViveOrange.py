@@ -140,13 +140,22 @@ class ViveOrange:
     fin = finD.strftime("%d/%m/%Y")
     
     logging.info("Consultamos registro jornada desde " + lunes + " hasta " + fin)
+    # r = s.post(configD.urlRJInforme, data = {"tipoInforme":"1",
+    #                                         "checkcodigo":"1", 
+    #                                         "seleccionIdEmpleado":"", 
+    #                                         "movil":"0",
+    #                                         "seleccionFechaInicio":lunes+"", 
+    #                                         "seleccionFechaFin":fin+""
+    #                                        })
+    
+    
     r = s.post(configD.urlRJInforme, data = {"tipoInforme":"1",
-                                             "checkcodigo":"1", 
-                                             "seleccionIdEmpleado":"", 
                                              "movil":"0",
-                                             "seleccionFechaInicio":lunes+"", 
-                                             "seleccionFechaFin":fin+""
-                                            })
+                                             "num":"0",
+                                             "seleccionFechaInicio":lunes+"",
+                                             "seleccionFechaFin":fin+""})
+    
+    
     html_text = r.text
     
     soup = BeautifulSoup(html_text, 'lxml')

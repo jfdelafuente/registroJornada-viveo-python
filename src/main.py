@@ -65,8 +65,8 @@ def main():
   if notificar == True:
     vive_orange = viveOrange.ViveOrange(registrar, pasada)
     logging.info("Vive Orange connect")
-    # mensaje += vive_orange.connectar(dia)
-    mensaje += vive_orange.dummy(dia)
+    mensaje += vive_orange.connectar(dia)
+    # mensaje += vive_orange.dummy(dia)
 
     # Lanzamos mensaje al bot
     logging.info("Enviamos el mensaje: '%s' al Bot" % mensaje)
