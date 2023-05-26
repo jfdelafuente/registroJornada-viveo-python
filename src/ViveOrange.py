@@ -189,7 +189,20 @@ class ViveOrange:
     fin = finD.strftime("%d/%m/%Y")
 
     logging.info("Consultamos registro jornada desde " + lunes + " hasta " + fin)
-    r = s.post(configD.urlRJInforme, data = {"tipoInforme":"1","checkcodigo":"1","seleccionIdEmpleado":"","movil":"0","seleccionFechaInicio":lunes+"","seleccionFechaFin":fin+""})
+    # r = s.post(configD.urlRJInforme, data = {"tipoInforme":"1",
+    #                                         "checkcodigo":"1", 
+    #                                         "seleccionIdEmpleado":"", 
+    #                                         "movil":"0",
+    #                                         "seleccionFechaInicio":lunes+"", 
+    #                                         "seleccionFechaFin":fin+""
+    #                                        })
+    
+    
+    r = s.post(configD.urlRJInforme, data = {"tipoInforme":"1",
+                                             "movil":"0",
+                                             "num":"0",
+                                             "seleccionFechaInicio":lunes+"",
+                                             "seleccionFechaFin":fin+""})
     html_text = r.text
     logging.info(html_text)
     logging.info(r.status_code)
