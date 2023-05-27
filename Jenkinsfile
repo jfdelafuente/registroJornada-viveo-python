@@ -1,9 +1,4 @@
 pipeline {
-	environment {
-		registry = "jfdelafuente/viveorange"
-		registryCredential = 'dockerhub_id'
-		dockerImage = ''
-	}
 	agent none
 	options {
 		skipStagesAfterUnstable()
