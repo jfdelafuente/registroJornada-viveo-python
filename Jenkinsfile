@@ -44,7 +44,7 @@ pipeline {
             }
             post {
                 success {
-                    archiveArtifacts "${env.BUILD_ID}/src/dist/add2vals"
+                    archiveArtifacts "${env.BUILD_ID}/src/dist/viveorange"
                     sh "docker run --rm -v ${VOLUME} ${IMAGE} 'rm -rf build dist'"
                 }
             }
