@@ -34,7 +34,7 @@ pipeline {
             agent any
             environment {
                 VOLUME = '$(pwd)/src:/src'
-                IMAGE = 'cdrx/pyinstaller-linux:python2'
+                IMAGE = 'cdrx/pyinstaller-linux:python3'
             }
             steps {
                 dir(path: env.BUILD_ID) {
