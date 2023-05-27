@@ -12,7 +12,7 @@ pipeline {
             }
             steps {
                 sh 'python -m py_compile src/bot.py src/ViveOrange.py src/configD.py src/utils.py'
-                stash(name: 'compiled-results', includes: 'src/*.py*')
+                stash(name: 'compiled-results', includes: 'source/*.py*')
             }
         }
         stage('Test') {
@@ -33,7 +33,7 @@ pipeline {
         stage('Deliver') {
             agent any
             environment {
-                VOLUME = '$(pwd)/src:/src'
+                VOLUME = '$(pwd)/sources:/src'
                 IMAGE = 'cdrx/pyinstaller-linux:python3'
             }
             steps {
@@ -44,7 +44,7 @@ pipeline {
             }
             post {
                 success {
-                    archiveArtifacts "${env.BUILD_ID}/src/dist/vive"
+                    archiveArtifacts "${env.BUILD_ID}/sources/dist/vive"
                     sh "docker run --rm -v ${VOLUME} ${IMAGE} 'rm -rf build dist'"
                 }
             }
