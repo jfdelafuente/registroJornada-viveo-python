@@ -1,5 +1,8 @@
 pipeline {
     agent none
+    options {
+        skipStagesAfterUnstable()
+    }
     stages {
         stage('Build') {
             agent {
@@ -19,7 +22,7 @@ pipeline {
                 }
             }
             steps {
-                sh 'py.test --junit-xml test-reports/results.xml src/test_calc.py'
+                sh 'py.test --junit-xml test-reports/results.xml src/test_vive.py'
             }
             post {
                 always {
