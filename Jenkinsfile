@@ -1,4 +1,9 @@
 pipeline {
+    environment {
+        registry = "jfdelafuente/viveorange"
+        registryCredential = 'dockerhub_id'
+        dockerImage = ''
+    }
     agent none
     options {
         skipStagesAfterUnstable()
@@ -30,23 +35,25 @@ pipeline {
                 }
             }
         }
-        stage('Deliver') {
-            agent any
-            environment {
-                VOLUME = '$(pwd)/src:/src/'
-                IMAGE = 'cdrx/pyinstaller-linux:python3'
+        stage('Building our image') {
+            steps{
+                script {
+                    dockerImage = docker.build registry + ":$BUILD_NUMBER"
+                }
             }
+        }
+        stage('Deploy our image') {
             steps {
-                dir(path: env.BUILD_ID) {
-                    unstash(name: 'compiled-results')
-                    sh "docker run --rm -v ${VOLUME} ${IMAGE} 'pyinstaller -F bot.py'"
+                script {
+                    docker.withRegistry( '', registryCredential ) {
+                        dockerImage.push()
+                    }
                 }
             }
-            post {
-                success {
-                    archiveArtifacts "${env.BUILD_ID}/sources/dist/vive"
-                    sh "docker run --rm -v ${VOLUME} ${IMAGE} 'rm -rf build dist'"
-                }
+        }
+        stage('Cleaning up') {
+            steps{
+                sh "docker rmi $registry:$BUILD_NUMBER"
             }
         }
     }
