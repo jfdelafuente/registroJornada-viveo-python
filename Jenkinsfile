@@ -12,11 +12,5 @@ pipeline {
                 stash(name: 'compiled-results', includes: 'src/*.py*')
             }
         }
-        stage('Test') {
-
-        }
-        stage('Deliver') {
-
-        }
     }
 }
