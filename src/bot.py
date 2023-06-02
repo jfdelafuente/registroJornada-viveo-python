@@ -23,14 +23,14 @@ logging.basicConfig(filename='registroJornada.log',
 # /start
 @bot.message_handler(commands=['start'])
 def _start(message):
-    ## reset
     dic_user["id"] = str(message.chat.id)
     logging.info(str(message.chat.username)+" - "+str(message.chat.id)+" --- START")
 
     ## send first msg
-    msg = "Hola "+str(message.chat.username)+\
-          ", Soy el Registro de Jornadas de Orange.\n\
-            Para conocer los comandos, use \n/help"
+    msg = "Hola "+str(message.chat.username)+ ",\n\
+        soy el Registro de Jornadas de Orange.\n\
+        Para conocer los comandos, use \n/help"
+        
     bot.send_message(message.chat.id, msg)
 
 
