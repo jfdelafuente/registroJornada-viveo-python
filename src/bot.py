@@ -155,7 +155,7 @@ def chat(message):
 
 
 def main():
-    bot.polling()
+    bot.infinity_polling()
 
 if __name__ == '__main__':
     main()
