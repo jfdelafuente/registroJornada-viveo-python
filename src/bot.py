@@ -1,4 +1,3 @@
-
 import os
 import telebot
 import logging
@@ -18,7 +17,7 @@ dic_user = {}
 logging.basicConfig(filename='registroJornada.log',
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', 
                     level=logging.INFO)
-logger = logging.getLogger(__name__)
+
 
 
 # /start
