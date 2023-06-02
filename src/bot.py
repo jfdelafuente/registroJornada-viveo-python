@@ -29,8 +29,7 @@ def _start(message):
     ## send first msg
     msg = "Hola "+str(message.chat.username)+ ",\n\
         soy el Registro de Jornadas de Orange.\n\
-        Para conocer los comandos, use \n/help"
-        
+        Para conocer los comandos, use \n/help"    
     bot.send_message(message.chat.id, msg)
 
 
