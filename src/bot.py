@@ -74,6 +74,7 @@ def info_handler(message):
     bot.send_message(message.chat.id, "Here's your info!")
     bot.send_message(message.chat.id, mensaje, parse_mode="Markdown")
 
+
 # /dia
 @bot.message_handler(commands=['dia'])
 def dia_handler(message):
@@ -111,36 +112,12 @@ def day_handler_teletrabajo(message, day):
         msg = "Utilice los siguients comandos:\n\
             /dia - Realizar un registro de jornada\n\
             /info - Ver Registro semanal\n\
-            /infop - Ver Registro semana pasada\n\
-            /horoscope - Ver el Horoscopo "
+            /infop - Ver Registro semana pasada\n"
         
     bot.send_message(message.chat.id, msg_cabecera)
     bot.send_message(message.chat.id, msg, parse_mode="Markdown")
         
-
-# /horoscope
-@bot.message_handler(commands=['horoscope'])
-def sign_handler(message):
-    text = "What's your zodiac sign?\nChoose one: *Aries*, *Taurus*, *Gemini*, *Cancer,* *Leo*, *Virgo*, *Libra*, *Scorpio*, *Sagittarius*, *Capricorn*, *Aquarius*, and *Pisces*."
-    sent_msg = bot.send_message(message.chat.id, text, parse_mode="Markdown")
-    bot.register_next_step_handler(sent_msg, day_handler2)
-
-def day_handler2(message):
-    sign = message.text
-    text = "What day do you want to know?\nChoose one: *TODAY*, *TOMORROW*, *YESTERDAY*, or a date in format YYYY-MM-DD."
-    sent_msg = bot.send_message(
-        message.chat.id, text, parse_mode="Markdown")
-    bot.register_next_step_handler(
-        sent_msg, fetch_horoscope, sign.capitalize())
-
-def fetch_horoscope(message, sign):
-    day = message.text
-    horoscope = get_daily_horoscope(sign, day)
-    data = horoscope["data"]
-    horoscope_message = f'*Horoscope:* {data["horoscope_data"]}\n*Sign:* {sign}\n*Day:* {data["date"]}'
-    bot.send_message(message.chat.id, "Here's your horoscope!")
-    bot.send_message(message.chat.id, horoscope_message, parse_mode="Markdown")
-
+   
 # non-command message
 @bot.message_handler(func=lambda m: True)
 def chat(message):
