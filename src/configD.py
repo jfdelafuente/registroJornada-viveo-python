@@ -9,7 +9,7 @@ diasTeletrabajo = [1,2]
 
 # Horas
 hinicio = "8:00"
-hfin = "18:00"
+hfin = "15:00"
 hinicioV = "7:30"
 hfinV = "15:00"
 
